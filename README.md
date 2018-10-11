@@ -17,7 +17,7 @@ Bootstrap scripts are used to fetch the executable artifacts for
 
 Script expects a specific version of the project to generate and fetch respective executables using Jitpack.
 
-####csw-bootstrap.sh
+#### csw-bootstrap.sh
 Generating executable against a sha of git commit. Used to get the changes already checked-into git.
 ```sbtshell
 ./scripts/csw-bootstrap.sh 235aa5852
@@ -27,7 +27,7 @@ Generating executable against a project version. Used to get the changes publish
 ./scripts/csw-bootstrap.sh 0.1-SNAPSHOT
 ```
 
-####esw-bootstrap.sh
+#### esw-bootstrap.sh
 Similarly, we can get artifacts for esw-prototype
 ```sbtshell
 ./scripts/esw-bootstrap.sh cfa9197e68
@@ -39,7 +39,7 @@ Similarly, we can get artifacts for esw-prototype
 ## Running csw services
 After running the csw-bootstrap.sh script, we can run the csw services by using the generated artifacts.
 
-####csw-services.sh
+#### csw-services.sh
 Generating executable against a sha of git commit. Used to get the changes already checked-into git.
 
 Assuming the version used to generate the artifacts is `235aa5852` and we are running the services for the first time.
