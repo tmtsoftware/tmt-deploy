@@ -66,3 +66,10 @@ e.g.
 ```sbtshell
 ./target/esw/cfa9197e68/bin/ocs-gateway 9000
 ```
+
+## Running ocs client
+After running the esw-bootstrap.sh script, we can run the esw gateway by using the generated artifact.
+Assuming version used with esw-bootstrap.sh is `cfa9197e68`
+```sbtshell
+./target/esw/cfa9197e68/bin/ocs-client
+```
