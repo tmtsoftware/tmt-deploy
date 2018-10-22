@@ -3,6 +3,7 @@
 if [ "$#" -ne 0 ]
 then
 mkdir -p target/esw/"$1"/bin
+cp coursier target/esw/"$1"/bin
 
 ./coursier bootstrap -r jitpack com.github.tmtsoftware.esw-prototype::ocs-gateway:"$1" -M ocs.gateway.GatewayApp -f -o target/esw/"$1"/bin/ocs-gateway
 cat > target/esw/"$1"/bin/ocs-client << EOL

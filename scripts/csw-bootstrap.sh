@@ -3,6 +3,7 @@
 if [ "$#" -ne 0 ]
 then
 mkdir -p target/csw/"$1"/bin
+cp coursier target/esw/"$1"/bin
 
 ./coursier bootstrap -r jitpack com.github.tmtsoftware.csw::csw-location-server:"$1" -M csw.location.server.Main -o target/csw/"$1"/bin/csw-location-server
 ./coursier bootstrap -r jitpack com.github.tmtsoftware.csw::csw-location-agent:"$1" -M csw.location.agent.Main -o target/csw/"$1"/bin/csw-location-agent
