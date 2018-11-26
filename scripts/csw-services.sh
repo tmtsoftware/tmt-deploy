@@ -34,7 +34,7 @@ config_port=5000
 sentinel_port=26379
 event_master_port=6379
 alarm_master_port=7379
-initSvnRepo=""
+initSvnRepo="--initRepo"
 
 # Always start cluster seed application
 shouldStartSeed=true
@@ -132,7 +132,7 @@ function start_seed {
 
     if [ -x "$location_script" ]; then
         echo "[LOCATION] Starting cluster seed on port: [$seed_port] ..."
-        nohup ./csw-location-server --clusterPort ${seed_port} &> ${locationLogFile} &
+        nohup ./csw-location-server --clusterPort ${seed_port} --testMode &> ${locationLogFile} &
         echo $! > ${locationPidFile}
     else
         echo "[ERROR] $location_script script does not exist, please make sure that $location_script resides in same directory as $script_name"
@@ -157,6 +157,8 @@ function start_sentinel() {
     if [ -x "$location_agent_script" ]; then
         if checkIfRedisIsInstalled ; then
             echo "Starting Redis Sentinel..."
+            sed -i- -e "s/eventServer 127.0.0.1/eventServer ${IP}/g" ${sentinelConf}
+            sed -i- -e "s/alarmServer 127.0.0.1/alarmServer ${IP}/g" ${sentinelConf}
             nohup ./csw-location-agent --name "EventServer,AlarmServer" --command "$redisSentinel ${sentinelConf} --port ${sentinel_port}" --port "${sentinel_port}"> ${sentinelLogFile} 2>&1 &
             echo $! > ${sentinelPidFile}
             echo ${sentinel_port} > ${sentinelPortFile}
@@ -224,9 +226,9 @@ function usage {
     echo "  --interfaceName | -i <name>     start cluster on ip address associated with provided interface, default: en0"
     echo "  --config <configPort>           start http config server on provided port, default: 5000"
     echo "  --initRepo                      create new svn repo, default: use existing svn repo"
-    echo -e "  --event | -es <esPort>       start event service on provided port, default: 6379 \n"
-    echo -a "  --alarm | -as <asPort>       start alarm service on provided port, default: 7379 \n"
-
+    echo "  --event | -es <esPort>          start event service on provided port, default: 6379"
+    echo "  --alarm | -as <asPort>          start alarm service on provided port, default: 7379"
+    echo
     echo "Commands:"
     echo "  start      Starts all csw services if no options provided"
     echo "  stop       Stops all csw services, it does not take any arguments"
@@ -304,16 +306,12 @@ function parse_cmd_args {
                     exit 1
                 else
                     seeds="${IP}:${seed_port}"
-                    export clusterSeeds=$seeds
                     echo "[INFO] Using clusterSeeds=$seeds"
 
                     start_services
 
                     echo "================================================================="
                     echo "All the logs are stored at location: [$logDir]"
-                    echo "================================================================="
-                    echo "For assemblies or HCD's to join this cluster and use config and event service from other machine's/nodes, run below command to export env variable:"
-                    echo "export clusterSeeds=$seeds"
                     echo "================================================================="
                 fi
             fi
